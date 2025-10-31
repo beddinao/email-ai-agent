@@ -1,0 +1,842 @@
+# n8n Interface - Complete Walkthrough
+
+## Initial Setup & Interface Overview
+
+### 1. Getting Started (First 10 minutes)
+
+**Go to:** https://n8n.io
+- Click "Get started free"
+- Sign up with Google (easiest)
+- Choose "Cloud" option (not self-hosted)
+- You'll land on n8n dashboard
+
+**Dashboard shows:**
+- Left sidebar: Workflows, Credentials, Executions
+- Center: Your workflows list (empty for now)
+- Top right: "New workflow" button
+
+---
+
+## Creating Your First Workflow
+
+### Step 1: New Workflow
+
+**Click:** "New workflow" (top right)
+
+**You'll see:**
+- **Big canvas** (middle) - where you build
+- **Left panel** - node list (collapsed)
+- **Top bar** - workflow name, save, test buttons
+- **Right panel** - node settings (appears when node selected)
+
+**First action:**
+- Click "Untitled workflow" at top
+- Rename to "Email AI Agent"
+- It auto-saves
+
+---
+
+## Understanding the Canvas
+
+### What You See:
+
+```
++------------------------+
+|  [+] Add first step    |  ← Click this to start
++------------------------+
+```
+
+**Important buttons:**
+- **+ (Plus icon)**: Add new node
+- **Execute Workflow** (top right): Test your workflow
+- **Save** (appears after changes): Save your work
+
+---
+
+## Node 1: Gmail Trigger - DETAILED
+
+### Adding the Node
+
+**Click:** "[+] Add first step" on canvas
+
+**Panel appears on right with tabs:**
+- **All** - shows all nodes
+- **Trigger** - nodes that start workflows (you want this)
+- **Actions** - nodes that do things
+
+**Click:** "Trigger" tab
+
+**Search bar at top:** Type "gmail"
+
+**You'll see:** 
+- Gmail Trigger (with Gmail icon)
+- Other email options
+
+**Click:** "Gmail Trigger"
+
+---
+
+### Configuring Gmail Trigger (The Tricky Part)
+
+**Node appears on canvas with settings panel on right**
+
+**Settings panel shows:**
+
+#### 1. Credential Section (Top)
+```
+Credential to connect with
+[ Select Credential ▼ ]
+```
+
+**Click dropdown** → Select "Create New Credential"
+
+**Popup appears:**
+
+```
+Gmail OAuth2 API Credentials
+
+This needs:
+- Google Client ID
+- Google Client Secret
+```
+
+**Stop! This is confusing. Here's the easy way:**
+
+**Click:** "Sign in with Google" button (if available)
+
+**OR** (if that's not there):
+
+1. **Click** "Connect my account"
+2. **Google popup appears** → Choose your Gmail
+3. **Grant permissions** → Allow n8n to access Gmail
+4. **Popup closes** → Credential created automatically
+
+**Now you see:**
+```
+Credential to connect with
+[ Gmail account (youremail@gmail.com) ]
+```
+
+---
+
+#### 2. Trigger Settings
+
+**Below credential, you see options:**
+
+```
+Event
+[ Message Received ▼ ]  ← Keep this
+```
+
+**This means:** Workflow runs when new email arrives
+
+**Other options shown:**
+```
+Label Names
+[ INBOX ▼ ]  ← Which folder to watch
+```
+Keep as INBOX
+
+```
+Polling
+[ Every 1 minute ▼ ]  ← How often to check
+```
+Keep default (1 minute is fine for testing)
+
+**Advanced options (click dropdown if curious):**
+- Search filters
+- Attachment handling
+- Mark as read options
+
+**For now:** Ignore advanced, keep defaults
+
+---
+
+#### 3. Testing the Node
+
+**Top right of settings panel:**
+```
+[ Test step ]  button
+```
+
+**Click it**
+
+**What happens:**
+- n8n checks your Gmail right now
+- Shows recent emails in the output panel below
+
+**Output panel appears below node:**
+```
+1 item
+▼ Item 0
+  - subject: "Test email"
+  - from: "someone@email.com"
+  - bodyPlainText: "Hello world"
+  - etc...
+```
+
+**This shows:** Node works! You can see email data.
+
+**If error:** Check Gmail credential, reconnect if needed
+
+---
+
+### Visual Guide to Node Layout
+
+```
++----------------------------------+
+|  Gmail Trigger (node on canvas)  |
++----------------------------------+
+          ↓ small dot at bottom (connection point)
+
+
+Right panel (when node clicked):
++----------------------------------+
+| Parameters                        |
+|                                  |
+| Credential: [your gmail]         |
+| Event: Message Received          |
+| Label: INBOX                     |
+|                                  |
+| [Test step] button               |
++----------------------------------+
+| Output (after test)              |
+|                                  |
+| Shows: Email data               |
++----------------------------------+
+```
+
+---
+
+## Node 2: Extract Email Text
+
+### Adding Second Node
+
+**On canvas:**
+- See small **dot at bottom** of Gmail Trigger node
+- **Hover over it** → It highlights
+- **Click + drag** to empty space → Line appears
+- **Release** → Node selection panel appears
+
+**OR easier way:**
+- **Click** the dot
+- **Plus icon appears**
+- **Click plus** → Node panel opens
+
+---
+
+### Choosing the Node
+
+**In node selection panel:**
+
+**Click:** "All" tab
+
+**Search:** "code" or "function"
+
+**You'll see:**
+- Code (runs JavaScript)
+- Function
+- Function Item
+
+**Click:** "Code"
+
+**Why Code node?** Simple way to extract and clean email text.
+
+---
+
+### Configuring Code Node
+
+**Node appears, settings panel shows:**
+
+```
+Mode
+[ Run Once for All Items ▼ ]  ← Keep this
+```
+
+**Below that, big text editor:**
+```javascript
+// Write your code here
+
+return items;
+```
+
+**Replace with this code:**
+
+```javascript
+// Get email text from previous node
+const emailBody = $input.first().json.bodyPlainText;
+const emailSubject = $input.first().json.subject;
+
+// Combine subject and body
+const emailContent = `${emailSubject}\n\n${emailBody}`;
+
+// Return it
+return [
+  {
+    json: {
+      emailContent: emailContent,
+      originalEmail: $input.first().json
+    }
+  }
+];
+```
+
+**What this code does:**
+- `$input.first()` = gets data from previous node (Gmail)
+- `.json.bodyPlainText` = gets email body text
+- `.json.subject` = gets subject line
+- Returns clean text for next node to use
+
+---
+
+### Understanding Code Node Parts
+
+**The editor shows:**
+- **Line numbers** (left side)
+- **Syntax highlighting** (colors for code)
+- **Bottom bar** shows any errors
+
+**Testing:**
+1. **Click** "Test step" button
+2. **Output appears below:**
+```
+1 item
+▼ Item 0
+  - emailContent: "Your extracted text"
+  - originalEmail: {...}
+```
+
+**If error:**
+- Red text shows problem
+- Usually means previous node didn't run (run Gmail Trigger first)
+
+---
+
+## Node 3: AI Router (OpenAI) - CRITICAL NODE
+
+### Adding OpenAI Node
+
+**From Code node:**
+- Click dot → Plus icon
+- **Search:** "openai"
+- **Select:** "OpenAI" (with OpenAI logo)
+
+---
+
+### Configuring OpenAI - Part 1: Credentials
+
+**Settings panel shows:**
+
+```
+Credential to connect with
+[ Select Credential ▼ ]
+```
+
+**Click dropdown** → "Create New Credential"
+
+**Popup shows:**
+```
+OpenAI API Credentials
+
+API Key: [________________]
+```
+
+**Getting API Key:**
+
+1. **Open new tab:** https://platform.openai.com
+2. **Sign up/Login** (use Gmail if new)
+3. **Click** your profile icon (top right)
+4. **Click** "View API Keys"
+5. **Click** "Create new secret key"
+6. **Name it** "n8n-test"
+7. **Copy the key** (shows once! Save it)
+
+**Back in n8n popup:**
+- **Paste** API key
+- **Click** "Save"
+
+**Credential created!**
+
+---
+
+### Configuring OpenAI - Part 2: Settings
+
+**Now settings panel shows:**
+
+```
+Resource
+[ Chat ▼ ]  ← Select this
+```
+
+**Below that:**
+```
+Operation  
+[ Create a Chat Completion ▼ ]  ← Keep this
+```
+
+**Model section:**
+```
+Model
+[ gpt-3.5-turbo ▼ ]  ← Cheap and fast, use this
+```
+
+**Messages section (IMPORTANT):**
+
+You'll see:
+```
+Messages
++ Add Message
+```
+
+**Click** "+ Add Message"
+
+**New row appears:**
+```
+Role: [ User ▼ ]
+Content: [_________________]
+```
+
+**In Content field, paste this:**
+
+```
+Read this email and decide what action is needed.
+
+Email: {{$json.emailContent}}
+
+Reply with ONLY ONE WORD:
+- SEARCH (if user wants you to find information online)
+- GENERATE (if user wants you to create/explain something)
+- ANALYZE (if user wants analysis of provided data)
+
+Reply:
+```
+
+---
+
+### Understanding the Prompt
+
+**The `{{$json.emailContent}}` part:**
+- Double curly braces = variable
+- Takes data from previous node (Code node)
+- Gets the emailContent we extracted
+
+**How to insert variables (easier way):**
+1. **Click** in Content field
+2. **Type:** `{{` (two curly braces)
+3. **Dropdown appears** showing available variables
+4. **Click** `json.emailContent`
+5. It inserts automatically
+
+---
+
+### OpenAI Node Testing
+
+**Click** "Test step"
+
+**What happens:**
+- Sends your prompt to OpenAI
+- AI reads it, responds
+
+**Output appears:**
+```
+1 item
+▼ Item 0
+  - message
+    - content: "SEARCH"  ← AI's decision
+    - role: "assistant"
+```
+
+**Important:** The AI's response is in `message.content`
+
+---
+
+### Common OpenAI Node Issues
+
+**Error: "Insufficient credits"**
+- Need to add payment method to OpenAI
+- Or use free trial ($5 credit)
+
+**Error: "Invalid API key"**
+- Key copied wrong
+- Go back to credentials, recreate
+
+**AI responds weirdly:**
+- Prompt unclear
+- Test with different email content
+
+---
+
+## Node 4: IF Node (Decision Split)
+
+### Adding IF Node
+
+**From OpenAI node:**
+- Dot → Plus → Search "if"
+- **Select:** "IF" node
+
+---
+
+### Configuring IF Node
+
+**Settings panel shows:**
+
+```
+Conditions
++ Add Condition
+```
+
+**Click** "+ Add Condition"
+
+**You see:**
+```
+Value 1: [_________________]
+Operation: [ Equal ▼ ]
+Value 2: [_________________]
+```
+
+**Filling it out:**
+
+**Value 1:** 
+- Click field
+- Type `{{`
+- Select `$json.message.content`
+- (This is the AI's response: SEARCH/GENERATE/ANALYZE)
+
+**Operation:** 
+- Keep as "Equal"
+
+**Value 2:**
+- Type: `SEARCH`
+
+**What this does:**
+- Checks if AI said "SEARCH"
+- If yes → goes to TRUE output
+- If no → goes to FALSE output
+
+---
+
+### Multiple Conditions (For 3 Paths)
+
+**Problem:** IF node only has TRUE/FALSE, we need 3 paths
+
+**Solution:** Use 2 IF nodes
+
+**IF Node 1:**
+- Check if AI said "SEARCH"
+- TRUE → Go to search action
+- FALSE → Go to second IF node
+
+**IF Node 2:**
+- Check if AI said "GENERATE"  
+- TRUE → Go to generate action
+- FALSE → Go to analyze action (default)
+
+**Visual:**
+```
+[OpenAI]
+    ↓
+[IF: SEARCH?]
+  ↓true        ↓false
+[Search]   [IF: GENERATE?]
+             ↓true    ↓false
+          [Generate] [Analyze]
+```
+
+---
+
+### IF Node Outputs
+
+**After adding IF node, you see:**
+- **Green dot (bottom right)** = TRUE path
+- **Red dot (bottom left)** = FALSE path
+
+**To add nodes to each path:**
+- Click TRUE dot → Add search node
+- Click FALSE dot → Add second IF node
+
+---
+
+## Node 5a: Web Search Action
+
+### Adding HTTP Request Node
+
+**From IF node TRUE output:**
+- Click green dot → Plus
+- Search "http"
+- Select "HTTP Request"
+
+---
+
+### Configuring Search (Using SerpAPI or similar)
+
+**For simplicity, use Google Custom Search:**
+
+**Settings:**
+```
+Method: [ GET ▼ ]
+
+URL: https://www.googleapis.com/customsearch/v1
+
+Query Parameters:
++ Add Parameter
+
+  Name: q
+  Value: {{$json.emailContent}}
+  
+  Name: key
+  Value: YOUR_GOOGLE_API_KEY
+  
+  Name: cx
+  Value: YOUR_SEARCH_ENGINE_ID
+```
+
+**Getting Google API key (free):**
+1. Google Cloud Console
+2. Enable Custom Search API
+3. Create API key
+4. Create Custom Search Engine
+
+**OR easier: Use Brave Search (has free tier)**
+
+**Search for "Brave Search" node in n8n instead**
+
+---
+
+### Brave Search Node (Easier)
+
+**If available in n8n:**
+
+**Search:** "brave"
+**Select:** "Brave Search"
+
+**Settings:**
+```
+Query: {{$json.emailContent}}
+Count: 3  (number of results)
+```
+
+**Test it:**
+- Should return search results
+- Output shows titles, URLs, descriptions
+
+---
+
+## Node 5b: Generate Content (Second Path)
+
+**From second IF node TRUE output:**
+
+**Add:** OpenAI node (same as before)
+
+**Configure:**
+```
+Model: gpt-3.5-turbo
+
+Message:
+Role: User
+Content: {{$json.emailContent}}
+
+(Just the email content, AI generates answer directly)
+```
+
+**This path:** AI answers the question without searching
+
+---
+
+## Node 5c: Analyze Data (Third Path)
+
+**From second IF node FALSE output:**
+
+**Add:** OpenAI node
+
+**Configure:**
+```
+Model: gpt-3.5-turbo
+
+Message:
+Role: User  
+Content: Analyze this data and provide insights: {{$json.emailContent}}
+```
+
+---
+
+## Node 6: Merge Paths (Code Node)
+
+**Problem:** 3 different paths, need to merge before sending email
+
+**Solution:** Code node that formats any result
+
+**Add Code node, connect all 3 action nodes to it**
+
+**How to connect multiple nodes to one:**
+1. Add Code node to canvas (click empty space → Plus)
+2. Drag from Search node output → to Code node
+3. Drag from Generate node output → to same Code node  
+4. Drag from Analyze node output → to same Code node
+
+**Code node receives input from whichever path ran**
+
+---
+
+### Format Results Code
+
+```javascript
+// Get the result from whichever action ran
+const input = $input.first().json;
+
+let formattedResponse = "";
+
+// Check which type of data we got
+if (input.message) {
+  // OpenAI response (Generate or Analyze path)
+  formattedResponse = input.message.content;
+  
+} else if (input.results) {
+  // Search results
+  formattedResponse = "Here's what I found:\n\n";
+  
+  input.results.slice(0, 3).forEach((result, i) => {
+    formattedResponse += `${i + 1}. ${result.title}\n`;
+    formattedResponse += `   ${result.url}\n\n`;
+  });
+  
+} else {
+  // Fallback
+  formattedResponse = "I processed your request but couldn't format the response.";
+}
+
+return [{
+  json: {
+    response: formattedResponse,
+    originalEmail: $input.first().json.originalEmail || {}
+  }
+}];
+```
+
+---
+
+## Node 7: Send Email Reply
+
+### Adding Gmail Send Node
+
+**From Format node:**
+- Dot → Plus
+- Search "gmail"
+- Select "Gmail" (not trigger, the regular one)
+
+---
+
+### Configuring Gmail Send
+
+**Settings:**
+```
+Resource: [ Message ▼ ]
+Operation: [ Send ▼ ]
+```
+
+**Credential:** Use same Gmail credential as trigger
+
+**To Email:**
+```
+{{$json.originalEmail.from.address}}
+```
+(Sends to whoever sent the original email)
+
+**Subject:**
+```
+Re: {{$json.originalEmail.subject}}
+```
+
+**Message (HTML or Text):**
+```
+{{$json.response}}
+```
+
+**Test it:**
+- Should send email to yourself
+- Check your Gmail inbox
+
+---
+
+## Interface Tips & Tricks
+
+### Canvas Navigation:
+- **Scroll wheel:** Zoom in/out
+- **Click + drag background:** Pan around
+- **Click node:** Select it (settings appear)
+- **Delete node:** Select it, press Delete key
+
+### Running Workflow:
+- **Test step:** Runs single node
+- **Execute workflow:** Runs entire workflow
+- **Production mode:** Auto-runs on trigger (after Save & Activate)
+
+### Debugging:
+- **Execution log:** Shows what happened
+- **Output data:** Below each node after running
+- **Error messages:** Red text, explains problem
+
+### Saving:
+- **Auto-saves** every change
+- **Manual save:** Ctrl+S (Cmd+S on Mac)
+- **Activate workflow:** Switch at top right (needs Save first)
+
+---
+
+## Complete Build Order Summary
+
+1. **Gmail Trigger** → Connect Gmail
+2. **Code (Extract)** → Get email text  
+3. **OpenAI (Router)** → AI decides action
+4. **IF (First)** → Check if SEARCH
+5. **IF (Second)** → Check if GENERATE (on FALSE path)
+6. **Search node** → On TRUE from first IF
+7. **OpenAI (Generate)** → On TRUE from second IF
+8. **OpenAI (Analyze)** → On FALSE from second IF
+9. **Code (Format)** → Merge all three paths
+10. **Gmail (Send)** → Reply with results
+
+---
+
+## Activation & Testing
+
+### After building:
+
+1. **Save workflow** (top right)
+2. **Click "Inactive" toggle** → Changes to "Active"
+3. **Workflow now runs automatically** when emails arrive
+
+### Testing end-to-end:
+
+1. **Send yourself email:** "Find me articles about AI"
+2. **Wait 1 minute** (polling interval)
+3. **Check Gmail:** Should get AI response
+4. **Check n8n Executions:** Left sidebar → See workflow run
+
+---
+
+## Common Interface Confusions
+
+**"Where did my node go?"**
+- Zoom out (scroll wheel back)
+- Or press "Fit to view" button (top toolbar)
+
+**"Can't connect nodes"**
+- Some nodes have multiple outputs (TRUE/FALSE)
+- Click correct dot color
+
+**"Node says 'Not executed'"**
+- Previous node didn't run successfully
+- Run previous nodes first (Test step button)
+
+**"Can't find output variable"**
+- Type `{{` to see available variables
+- Run previous node first to populate data
+
+**"Workflow not triggering"**
+- Must be Active (toggle top right)
+- Must be Saved
+- Gmail polling = 1 min delay
+
+---
+
+**This is everything you need to know about the n8n interface. Which node do you want to start building first?**
