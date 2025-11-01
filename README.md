@@ -1,6 +1,6 @@
 # *`email-ai-agent`*
 
-AI email agent that reads incoming emails, decides what action to take, and responds with good formatted results.
+AI email agent that reads incoming emails, decides what action to take, and responds with a good formatted results.
 
 ![Workflow Overview](screenshots/workflow_overview.png)
 
@@ -9,17 +9,17 @@ AI email agent that reads incoming emails, decides what action to take, and resp
 ### workflow overview
 
 ```
-Email Received → Extract Content → AI Router → Decision Branch
+Email Received → Extract Content → AI Router (Deciding Action)
                                         ↓
-                        ┌───────────────┼───────────────┐
-                        ↓               ↓               ↓
-                    SEARCH         GENERATE        ANALYZE
-                        ↓               ↓               ↓
-                    Google API         GPT             GPT
-                        ↓               ↓               ↓
-                        └───────────────┴───────────────┘
-                                        ↓
-                                Format Results → Send Email
+                        ┌───────────────┼───────────────┐───────────────┐
+                        ↓               ↓               ↓               ↓
+                      SEARCH         GENERATE        ANALYZE        IRRELEVANT 
+                        ↓               ↓               ↓               ↓
+                    Google API         GPT             GPT              ↓
+                        ↓               ↓               ↓               ↓ 
+                        └───────────────┴───────────────┘───────────────┘
+                                               ↓
+                                         Format Results → Send Email
 ```
 
 ### used stack
@@ -27,7 +27,7 @@ Email Received → Extract Content → AI Router → Decision Branch
 | Component | Technology | Purpose |
 |-----------|-----------|---------|
 | Automation | n8n Cloud | Workflow orchestration |
-| AI Model | gpt (4.0-mini) | Decision-making & generation |
+| AI Model | gpt | Decision-making & generation |
 | Web Search | Google Custom Search Engine | Information retrieval |
 | Email | Gmail API | Trigger & responses |
 
@@ -49,21 +49,6 @@ Send an email with "TO AI:" in the subject, and the agent:
 - **Professional Email Formatting** - Clean, styled HTML responses
 - **24/7 Availability** - Cloud-hosted on n8n
 
-## demo
-
-**Try it yourself:**
-1. Send email to: `bilaleddinaoui@gmail.com`
-2. Subject: `TO AI: [your request]`
-3. Body: Empty/Your question or request
-4. Get automated response in ~1 minute
-
-**Example requests:**
-```
-TO AI: Find recent articles about machine learning
-TO AI: Explain quantum computing in simple terms
-TO AI: Analyze this sales data: some_data
-```
-
 ## what makes it "Agentic"
 
 Unlike traditional automation that follows fixed paths, this system:
@@ -72,43 +57,43 @@ Unlike traditional automation that follows fixed paths, this system:
 - **Executes** different workflows based on context
 - **Adapts** to various request types autonomously
 
-## screenshots
+## demo
 
-### Search Results
-![Search Results](screenshots/search_result.png)
+**Try it yourself:**
+1. Send email to: `bilaleddinaoui@gmail.com`
+2. Subject: `TO AI: (your request)`
+3. Body: Empty/Your question or request
+4. Get automated response in ~1 minute
 
-### Generated Content
-![Generated Content](screenshots/generate_result.png)
+## screenshots & example requests
 
-### Data Analysis
-![Data Analysis](screenshots/analyze_result.png)
+### search results 
 
-## Setup & Installation
+```TO AI: Find recent articles about machine learning```
 
-### Prerequisites
-- n8n account (cloud or self-hosted)
-- Gmail account
-- openRouter API key (free tier available)
-- Google Custom Search API key
+<div align="left">
+  <img  width="70%" src="./screenshots/search_result.png" title="search results" />
+</div>
 
-### Installation Steps
+### Generated Content 
 
-1. **Import Workflow**
-   ```bash
-   # Download Email_AI_Agent.json from this repo
-   # In n8n: Workflows → Import from File
-   ```
+```TO AI: Explain quantum computing in simple terms```
 
-2. **configure credentials**
-   - Gmail OAuth (for trigger and send)
-   - openrouter API key
-   - Google Custom Search API + Engine ID
+<div align="left">
+  <img  width="70%" src="./screenshots/generate_result.png" title="generate result" />
+</div>
 
-3. **activate workflow**
-   - Click "Active" toggle in n8n
-   - Test with sample email
+### data analysis 
 
-## requirements
+```TO AI: Analyze this C expression *(int*)1337 = 1;```
+
+<div align="left">
+  <img  width="70%" src="./screenshots/analyze_result.png" title="analysis result" />
+</div>
+
+## setup & installation
+
+### requirements
 
 - **n8n:** Cloud (free tier) or self-hosted
 - **openrouter API:** Free tier (14,400 requests/day)
@@ -116,6 +101,23 @@ Unlike traditional automation that follows fixed paths, this system:
 - **Gmail:** Any Gmail account
 
 **Total Cost:** $0 for demo/testing purposes
+
+### installation steps
+
+1. **Import Workflow**
+   ```bash
+   # download email_ai_agent_n8n_workflow.json from this repo
+   # in n8n: workflows → import from File
+   ```
+
+2. **configure credentials**
+   - Gmail OAuth (for trigger and send)
+   - openrouter API key
+   - Google Custom Search API + Custom Engine ID
+
+3. **activate workflow**
+   - click "Active" toggle in n8n
+   - test with sample email
 
 ## What I Learned
 
