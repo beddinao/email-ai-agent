@@ -31,15 +31,6 @@ Email Received → Extract Content → AI Router (Deciding Action)
 | Web Search | Google Custom Search Engine | Information retrieval |
 | Email | Gmail API | Trigger & responses |
 
-
-## what it does
-
-Send an email with "TO AI:" in the subject, and the agent:
-1. **Analyzes** your request using AI
-2. **Decides** which action to take (search, generate, or analyze)
-3. **Executes** the appropriate action
-4. **Responds** with beautifully formatted results
-
 ## features
 
 - **Autonomous Decision-Making** - AI determines the best action for each request
@@ -121,7 +112,7 @@ Unlike traditional automation that follows fixed paths, this system:
 
 ## What I Learned
 
-Building this project in 2 hours taught me:
+Building this project in ~2 hours taught me:
 - Designing multi-path agentic workflows
 - Integrating multiple APIs (openrouter, Google, Gmail)
 - Creating professional HTML email templates
