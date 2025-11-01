@@ -75,13 +75,13 @@ Unlike traditional automation that follows fixed paths, this system:
 ## screenshots
 
 ### Search Results
-![Search Results](screenshots/search-result.png)
+![Search Results](screenshots/search_result.png)
 
 ### Generated Content
-![Generated Content](screenshots/generate-result.png)
+![Generated Content](screenshots/generate_result.png)
 
 ### Data Analysis
-![Data Analysis](screenshots/analyze-result.png)
+![Data Analysis](screenshots/analyze_result.png)
 
 ## Setup & Installation
 
