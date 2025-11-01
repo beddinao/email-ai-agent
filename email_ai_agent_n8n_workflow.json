@@ -3,52 +3,20 @@
   "nodes": [
     {
       "parameters": {
-        "pollTimes": {
-          "item": [
-            {
-              "mode": "everyMinute"
-            }
-          ]
-        },
-        "simple": false,
-        "filters": {
-          "labelIds": [
-            "INBOX"
-          ]
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.gmailTrigger",
-      "typeVersion": 1.3,
-      "position": [
-        -720,
-        192
-      ],
-      "id": "b842be2f-b983-4598-bf5f-b3e58ac0dead",
-      "name": "Gmail Trigger",
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "",
-          "name": "Gmail account"
-        }
-      }
-    },
-    {
-      "parameters": {
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
       "typeVersion": 1,
       "position": [
-        1184,
-        816
+        1472,
+        208
       ],
       "id": "761f3f0a-3f9b-4076-8761-4e402e347033",
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
           "id": "",
-          "name": "OpenRouter account"
+          "name": "OpenRouter account 2"
         }
       }
     },
@@ -80,8 +48,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1088,
-        -144
+        976,
+        -784
       ],
       "id": "1a44c023-59d0-43a8-9026-bdf56b79a4d8",
       "name": "if irrelevant"
@@ -114,8 +82,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1152,
-        112
+        1120,
+        -608
       ],
       "id": "167da64d-4bfb-4547-ad28-ec2a630bdf93",
       "name": "if search"
@@ -148,8 +116,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        944,
-        320
+        1248,
+        -416
       ],
       "id": "8aef6373-a19d-47ba-a5cb-4840d0940b26",
       "name": "If generate"
@@ -182,8 +150,8 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1152,
-        512
+        1376,
+        -208
       ],
       "id": "ec39c905-6044-4124-b265-3461490f64df",
       "name": "If analyze"
@@ -195,8 +163,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        688,
-        192
+        784,
+        -784
       ],
       "id": "9681b0dc-82bc-4370-aeca-4dec8dd430cc",
       "name": "evaluating ai output"
@@ -234,8 +202,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.3,
       "position": [
-        1520,
-        16
+        1632,
+        -624
       ],
       "id": "c13d71df-75d4-49b3-b91a-942691bbb232",
       "name": "HTTP Request"
@@ -247,8 +215,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1744,
-        16
+        1824,
+        -624
       ],
       "id": "05b050ba-babb-4436-8e6e-dc718de5fc72",
       "name": "search result filter"
@@ -260,8 +228,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1856,
-        208
+        1904,
+        -432
       ],
       "id": "c5deba92-f393-4f84-9429-9368dec6104f",
       "name": "generated data filter"
@@ -273,8 +241,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1952,
-        448
+        2000,
+        -224
       ],
       "id": "085e95c6-3a34-47bd-a899-637dedb3b1bd",
       "name": "analyzed data filter"
@@ -282,14 +250,14 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=EmailSubject: [{{ $json.data[0].json.subject }}]\nEmailBody: [{{ $json.data[0].json.body }}]\nAnalyze the EmailSubject and EmailBody and decide what the user wants and output one string in the form '{\"output\":${one of the following actions},\"operation\": ${if SEARCH what to search for should be in here else if GENERATE what to generate else if ANALYZE what is the data that should be analyzed else if IRRELEVANT leave this empty}, \"subject\":{{ $json.data[0].json.subject }},\"body\":{{ $json.data[0].json.body }}, \"id\": {{ $json.data[0].json.id }}, \"client_email\": {{ $json.data[0].json.client_email }}, \"client_name\":{{ $json.data[0].json.client_name }} }':\n- SEARCH (if the user wants to search online for something).\n- GENERATE (if the user wants to generate ssomething).\n- ANALYZE (if the user wants an analysis of provided data).\n- IRRELEVANT (if the user request does not match any of the above topics).\nReply:",
+        "text": "=EmailSubject: [{{ $('Email Trigger (IMAP)').item.json.subject }}]\nEmailBody: [{{ $('Email Trigger (IMAP)').item.json.text }}]\nAnalyze the EmailSubject and EmailBody and decide what the user wants and output one string in the form '{\"output\":${one of the following actions},\"operation\": ${if SEARCH what to search for should be in here else if GENERATE what to generate else if ANALYZE what is the data that should be analyzed else if IRRELEVANT leave this empty}, \"subject\":{{ $('Email Trigger (IMAP)').item.json.subject }},\"body\":{{ $('Email Trigger (IMAP)').item.json.text }}, \"id\": {{ $('Email Trigger (IMAP)').item.json.messageId }}, \"client_email\":{{ $('Email Trigger (IMAP)').item.json.from.value[0].address }} , \"client_name\":{{ $('Email Trigger (IMAP)').item.json.from.value[0].name }} }':\n- SEARCH (if the user wants to search online for something).\n- GENERATE (if the user wants to generate ssomething).\n- ANALYZE (if the user wants an analysis of provided data).\n- IRRELEVANT (if the user request does not match any of the above topics).\nReply:",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        288,
-        192
+        432,
+        -784
       ],
       "id": "2a10d358-7b67-4b88-929a-95e0e31333e4",
       "name": "ai agent: user request analysis"
@@ -303,8 +271,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        1472,
-        304
+        1584,
+        -432
       ],
       "id": "0b9e2cf5-5eda-4194-a7fb-65b858ece956",
       "name": "ai agent: content generation"
@@ -318,26 +286,24 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3,
       "position": [
-        1568,
-        576
+        1696,
+        -224
       ],
       "id": "19aa091a-6784-4a19-bc71-ee0d87a22098",
       "name": "ai agent: custom data analysis"
     },
     {
       "parameters": {
-        "operation": "reply",
-        "messageId": "={{ $json.request_email_id }}",
+        "sendTo": "={{ $json.request_email_addr }}",
+        "subject": "=AI Response for your {{ $json.request_operation }} request",
         "message": "={{ $json.results }}",
-        "options": {
-          "ccList": "={{ $json.request_email_addr }}"
-        }
+        "options": {}
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        2464,
-        208
+        2512,
+        -192
       ],
       "id": "0d4f7b6f-525d-482a-a6b9-84c3863208c1",
       "name": "Gmail respond",
@@ -351,13 +317,14 @@
     },
     {
       "parameters": {
-        "jsCode": "return {\"subject\": $input.item.json.subject, \"body\": $input.item.json.text, \"id\": $input.first().json.id, \"client_email\": $input.first().json.from.value[0].address, \"client_name\": $input.first().json.from.value[0].name };\n"
+        "mode": "runOnceForEachItem",
+        "jsCode": "return {\n  \"subject\": $json.subject, \"body\": $json.text,\n  \"id\": $json.messageId, \"client_email\": $json.from.value[0].address,\n  \"client_name\": $json.from.value[0].name\n}\n"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -480,
-        192
+        192,
+        16
       ],
       "id": "21ce5cba-bdd8-4645-86a0-b5d70bf8ec51",
       "name": "email request extraction",
@@ -365,42 +332,30 @@
     },
     {
       "parameters": {
-        "jsCode": "let resultsHTML = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin: 0; padding: 0; background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\">\n  \n  <!-- Container -->\n  <div style=\"max-width: 620px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e5e5e5;\">\n    \n    <!-- Header -->\n    <div style=\"background: #ffffff; padding: 24px 24px 20px 24px; border-bottom: 2px solid #64748b;\">\n      <h1 style=\"margin: 0; color: #1e293b; font-size: 22px; font-weight: 600; letter-spacing: -0.3px;\">\n        Request Not Supported\n      </h1>\n    </div>\n\n    <!-- Content Section -->\n    <div style=\"padding: 24px;\">\n      \n      <!-- Message Card -->\n      <div style=\"background: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #64748b; border-radius: 6px; padding: 18px;\">\n        \n        <!-- Icon Badge -->\n        <div style=\"margin-bottom: 12px;\">\n          <span style=\"background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;\">\n            ℹ️ Notice\n          </span>\n        </div>\n        \n        <!-- Message -->\n        <p style=\"margin: 0; color: #475569; font-size: 14px; line-height: 1.6;\">\n          I can help you with:\n        </p>\n        <ul style=\"margin: 10px 0 0 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.8;\">\n          <li><strong>Searching</strong> for information online</li>\n          <li><strong>Generating</strong> content or explanations</li>\n          <li><strong>Analyzing</strong> data you provide</li>\n        </ul>\n        \n      </div>\n\n    </div>\n\n    <!-- Footer -->\n    <div style=\"background: #fafafa; padding: 16px 24px; border-top: 1px solid #e5e5e5; text-align: center;\">\n      <p style=\"margin: 0; font-size: 12px; color: #94a3b8;\">\n        AI Email Assistant\n      </p>\n    </div>\n\n  </div>\n  \n</body>\n</html>\n`;\n\nreturn {\n  \"request_operation\": \"IRRELEVANT\",\n  \"request_email_id\": $input.first().json.id,\n  \"request_email_addr\": $input.first().json.client_email,\n  \"request_email_name\": $input.first().json.client_name,\n  \"results\": resultsHTML,\n};"
+        "jsCode": "let resultsHTML = `\n<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin: 0; padding: 0; background: #f5f5f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\">\n  \n  <!-- Container -->\n  <div style=\"max-width: 620px; margin: 30px auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e5e5e5;\">\n    \n    <!-- Header -->\n    <div style=\"background: #ffffff; padding: 24px 24px 20px 24px; border-bottom: 2px solid #64748b;\">\n      <h1 style=\"margin: 0; color: #1e293b; font-size: 22px; font-weight: 600; letter-spacing: -0.3px;\">\n        Request Not Supported\n      </h1>\n    </div>\n\n    <!-- Content Section -->\n    <div style=\"padding: 24px;\">\n      \n      <!-- Message Card -->\n      <div style=\"background: #f8fafc; border: 1px solid #e2e8f0; border-left: 3px solid #64748b; border-radius: 6px; padding: 18px;\">\n        \n        <!-- Icon Badge -->\n        <div style=\"margin-bottom: 12px;\">\n          <span style=\"background: #f1f5f9; color: #64748b; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;\">\n            ℹ️ Notice\n          </span>\n        </div>\n        \n        <!-- Message -->\n        <p style=\"margin: 0; color: #475569; font-size: 14px; line-height: 1.6;\">\n          I can help you with:\n        </p>\n        <ul style=\"margin: 10px 0 0 0; padding-left: 20px; color: #475569; font-size: 14px; line-height: 1.8;\">\n          <li><strong>Searching</strong> for information online</li>\n          <li><strong>Generating</strong> content or explanations</li>\n          <li><strong>Analyzing</strong> data you provide</li>\n        </ul>\n        \n      </div>\n\n    </div>\n\n    <!-- Footer -->\n    <div style=\"background: #fafafa; padding: 16px 24px; border-top: 1px solid #e5e5e5; text-align: center;\">\n      <p style=\"margin: 0; font-size: 12px; color: #94a3b8;\">\n        AI Email Assistant\n      </p>\n    </div>\n\n  </div>\n  \n</body>\n</html>\n`;\n\nreturn {\n  \"request_operation\": \"IRRELEVANT\",\n  \"request_email_id\": $input.first().json.id,\n  \"request_email_addr\": $input.first().json.data.json.client_email ? $input.first().json.data.json.client_email : $input.first().json.client_email,\n  \"request_email_name\": $input.first().json.client_name,\n  \"results\": resultsHTML,\n};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1440,
-        -304
+        1584,
+        -800
       ],
       "id": "34ec1874-c4f9-4865-9b6b-faca638c5983",
       "name": "generate input error"
     },
     {
       "parameters": {
-        "jsCode": "let valid = true;\n\nif ($input == undefined)\n  valid = false;\nelse {\n  let input_json = $input.first().json;\n  if ((!input_json.body.length && !input_json.subject.length)\n     || !input_json.id.length || !input_json.client_email.length)\n    valid = false;\n  if (!input_json.subject.startsWith(\"TO AI:\"))\n    valid = false;\n}\n\nreturn { \"valid\": valid, \"data\": $input.all()};"
+        "mode": "runOnceForEachItem",
+        "jsCode": "let valid = true;\n\nif ($input == undefined)\n  valid = false;\nelse {\n  let input_json = $input.item.json;\n  if ((!input_json.body.length && !input_json.subject.length)\n     || !input_json.id.length || !input_json.client_email.length)\n    valid = false;\n  if (!input_json.subject.startsWith(\"TO AI:\"))\n    valid = false;\n}\n\nreturn { \"valid\": valid, \"data\": $input.item};"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -224,
-        192
+        400,
+        16
       ],
       "id": "52f74d25-9240-4e15-be0b-e0f1e6b477b0",
       "name": "primary input validation"
-    },
-    {
-      "parameters": {
-        "jsCode": "let result = `{\"output\": \"IRRELEVANT\",\"operation\": \"something intresting\", \"subject\": \"this is a demo subject\",\"body\": \"this is a demo body\", \"id\":\"${$input.first().json.id}\" , \"client_email\": \"bilaleddinaoui@gmail.com\", \"client_name\": \"CLIENTN\"}`\n\nreturn {\"output\": result};"
-      },
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        160,
-        -144
-      ],
-      "id": "2b62a87b-5739-4781-8699-1076d2dd50e7",
-      "name": "temp email generation"
     },
     {
       "parameters": {
@@ -430,26 +385,48 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        16,
-        96
+        208,
+        -768
       ],
       "id": "ded66eba-fd7f-4b79-8cfa-429c0e8fff2b",
       "name": "If valid input"
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        32,
+        16
+      ],
+      "id": "76f431a7-69ef-4d20-9b3d-4b7edf5bc01f",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        576,
+        16
+      ],
+      "id": "12920e99-6576-41a8-85d9-fb90c2031c28",
+      "name": "loop over emails"
     }
   ],
   "pinData": {},
   "connections": {
-    "Gmail Trigger": {
-      "main": [
-        [
-          {
-            "node": "email request extraction",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "OpenRouter Chat Model": {
       "ai_languageModel": [
         [
@@ -657,16 +634,11 @@
       "main": [
         [
           {
-            "node": "If valid input",
+            "node": "loop over emails",
             "type": "main",
             "index": 0
           }
         ]
-      ]
-    },
-    "temp email generation": {
-      "main": [
-        []
       ]
     },
     "If valid input": {
@@ -678,18 +650,41 @@
             "index": 0
           }
         ],
+        []
+      ]
+    },
+    "Gmail respond": {
+      "main": [
         [
           {
-            "node": "generate input error",
+            "node": "loop over emails",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Gmail respond": {
+    "Email Trigger (IMAP)": {
       "main": [
-        []
+        [
+          {
+            "node": "email request extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "loop over emails": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If valid input",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     }
   },
@@ -697,7 +692,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "a263bec0-0912-4ee8-8339-eedc8865d27c",
+  "versionId": "5fd8ed16-3fdd-4bab-9b96-bf48b960ca46",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "c0aa12803e16e57d28d2df4460c0020344c4e08e16582d1e4ba2e8f0940f9e96"
