@@ -1,6 +1,6 @@
 # *`email-ai-agent`*
 
-AI email agent that reads incoming emails, decides what action to take, and responds with a good formatted results.
+Reads requests, decides actions, responds automatically.
 
 ![Workflow Overview](screenshots/workflow_overview.png)
 
