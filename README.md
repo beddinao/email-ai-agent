@@ -2,7 +2,7 @@
 
 autonomous AI email agent that reads incoming emails, decides what action to take, and responds with good formatted results.
 
-![Workflow Overview](screenshots/workflow-overview.png)
+![Workflow Overview](screenshots/workflow_overview.png)
 
 ## architecture
 
