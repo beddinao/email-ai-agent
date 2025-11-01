@@ -1,6 +1,6 @@
 # *`email-ai-agent`*
 
-autonomous AI email agent that reads incoming emails, decides what action to take, and responds with good formatted results.
+AI email agent that reads incoming emails, decides what action to take, and responds with good formatted results.
 
 ![Workflow Overview](screenshots/workflow_overview.png)
 
@@ -72,7 +72,7 @@ Unlike traditional automation that follows fixed paths, this system:
 - **Executes** different workflows based on context
 - **Adapts** to various request types autonomously
 
-## Screenshots
+## screenshots
 
 ### Search Results
 ![Search Results](screenshots/search-result.png)
