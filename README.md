@@ -112,7 +112,7 @@ Unlike traditional automation that follows fixed paths, this system:
 
 ## What I Learned
 
-Building this project in ~2 hours taught me the basics of:
+Building this project in ~4 hours taught me the basics of:
 - Designing multi-path agentic workflows
 - Integrating multiple APIs (openrouter, Google, Gmail)
 - Creating professional HTML email templates
