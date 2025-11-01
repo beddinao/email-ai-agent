@@ -28,7 +28,7 @@
       "name": "Gmail Trigger",
       "credentials": {
         "gmailOAuth2": {
-          "id": "AXfyhIb8ICxBEQEJ",
+          "id": "",
           "name": "Gmail account"
         }
       }
@@ -47,7 +47,7 @@
       "name": "OpenRouter Chat Model",
       "credentials": {
         "openRouterApi": {
-          "id": "ErgdOglqU9hPcIQx",
+          "id": "",
           "name": "OpenRouter account"
         }
       }
@@ -209,11 +209,11 @@
           "parameters": [
             {
               "name": "key",
-              "value": " AIzaSyAy_bNkoMQ2zAH4CCmveSnfJfkr6Cg3P-8"
+              "value": ""
             },
             {
               "name": "cx",
-              "value": "f7f1b53e8f60542d0"
+              "value": ""
             },
             {
               "name": "q",
@@ -344,7 +344,7 @@
       "webhookId": "b8912461-c830-4231-94b7-d20748e07a47",
       "credentials": {
         "gmailOAuth2": {
-          "id": "AXfyhIb8ICxBEQEJ",
+          "id": "",
           "name": "Gmail account"
         }
       }
