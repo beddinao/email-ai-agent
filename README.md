@@ -9,17 +9,17 @@ Reads requests, decides actions, responds automatically.
 ### workflow overview
 
 ```
-Email Received → Extract Content → AI Router (Deciding Action)
-                                        ↓
-                        ┌───────────────┼───────────────┐───────────────┐
-                        ↓               ↓               ↓               ↓
-                      SEARCH         GENERATE        ANALYZE        IRRELEVANT 
-                        ↓               ↓               ↓               ↓
-                    Google API         GPT             GPT              ↓
-                        ↓               ↓               ↓               ↓ 
-                        └───────────────┴───────────────┘───────────────┘
-                                               ↓
-                                         Format Results → Send Email
+Emails Received → For Each Email → Extract Content → AI Router (Deciding Action)
+                                                                ↓
+                                        ┌───────────────┐───────────────┐───────────────┐
+                                        ↓               ↓               ↓               ↓
+                                      SEARCH         GENERATE        ANALYZE        IRRELEVANT 
+                                        ↓               ↓               ↓               ↓
+                                    Google API         GPT             GPT              ↓
+                                        ↓               ↓               ↓               ↓ 
+                                        └───────────────┴───────────────┴───────────────┘
+                                                                ↓
+                                                         Format Results → Send Email
 ```
 
 ### used stack
