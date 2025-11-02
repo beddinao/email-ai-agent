@@ -9,17 +9,17 @@ Reads requests, decides actions, responds automatically.
 ### workflow overview
 
 ```
-Email Received → Extract Content → AI Router (Deciding Action)
-                                        ↓
-                        ┌───────────────┼───────────────┐───────────────┐
-                        ↓               ↓               ↓               ↓
-                      SEARCH         GENERATE        ANALYZE        IRRELEVANT 
-                        ↓               ↓               ↓               ↓
-                    Google API         GPT             GPT              ↓
-                        ↓               ↓               ↓               ↓ 
-                        └───────────────┴───────────────┘───────────────┘
-                                               ↓
-                                         Format Results → Send Email
+Emails Received → For Each Email → Extract Content → AI Router (Deciding Action)
+                                                                ↓
+                                        ┌───────────────┐───────────────┐───────────────┐
+                                        ↓               ↓               ↓               ↓
+                                      SEARCH         GENERATE        ANALYZE        IRRELEVANT 
+                                        ↓               ↓               ↓               ↓
+                                    Google API         GPT             GPT              ↓
+                                        ↓               ↓               ↓               ↓ 
+                                        └───────────────┴───────────────┴───────────────┘
+                                                                ↓
+                                                         Format Results → Send Email
 ```
 
 ### used stack
@@ -112,7 +112,7 @@ Unlike traditional automation that follows fixed paths, this system:
 
 ## What I Learned
 
-Building this project in ~2 hours taught me the basics of:
+Building this project in ~4 hours taught me the basics of:
 - Designing multi-path agentic workflows
 - Integrating multiple APIs (openrouter, Google, Gmail)
 - Creating professional HTML email templates
